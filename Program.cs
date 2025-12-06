@@ -15,6 +15,7 @@ class Program
 
         LogService logger = new LogService();
         AuthService auth = new AuthService(accounts, logger);
+        MenuService menu = new MenuService();
 
         while (true)
         {
@@ -29,6 +30,15 @@ class Program
             if (account != null)
             {
                 Console.WriteLine("Login successful!");
+
+                if (account.Role == "Admin")
+                {
+                    menu.ShowAdminMenu();
+                }
+                else
+                {
+                    menu.ShowUserMenu();
+                }
             }
             else
             {
