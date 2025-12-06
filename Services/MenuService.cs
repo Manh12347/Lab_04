@@ -4,16 +4,15 @@ namespace MIS_Lab4.Services
 {
     public class MenuService
     {
-        public void ShowAdminMenu()
+        public void ShowAdminMenu(UserManagementService userService, string currentAdmin)
         {
             while (true)
             {
                 Console.WriteLine("\n=== ADMIN MENU ===");
                 Console.WriteLine("1. View all users");
-                Console.WriteLine("2. Add new user");
+                Console.WriteLine("2. Add user");
                 Console.WriteLine("3. Delete user");
                 Console.WriteLine("4. Unlock account");
-                Console.WriteLine("5. View system logs");
                 Console.WriteLine("0. Logout");
 
                 Console.Write("Choose: ");
@@ -22,22 +21,19 @@ namespace MIS_Lab4.Services
                 switch (choice)
                 {
                     case "1":
-                        Console.WriteLine("Feature: View all users (placeholder)");
+                        userService.ViewAllUsers();
                         break;
                     case "2":
-                        Console.WriteLine("Feature: Add user (placeholder)");
+                        userService.AddUser();
                         break;
                     case "3":
-                        Console.WriteLine("Feature: Delete user (placeholder)");
+                        userService.DeleteUser(currentAdmin);
                         break;
                     case "4":
-                        Console.WriteLine("Feature: Unlock account (placeholder)");
-                        break;
-                    case "5":
-                        Console.WriteLine("Feature: Show logs (placeholder)");
+                        userService.UnlockUser();
                         break;
                     case "0":
-                        return; // logout
+                        return;
                     default:
                         Console.WriteLine("Invalid choice!");
                         break;

@@ -45,6 +45,12 @@ namespace MIS_Lab4.Services
             }
             else
             {
+                // Khởi tạo loginAttempts nếu chưa có (cho user mới được thêm)
+                if (!loginAttempts.ContainsKey(user.Username))
+                {
+                    loginAttempts[user.Username] = 0;
+                }
+
                 loginAttempts[user.Username]++;
                 logger.WriteLog($"Failed login attempt for {username}");
 

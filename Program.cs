@@ -16,36 +16,32 @@ class Program
         LogService logger = new LogService();
         AuthService auth = new AuthService(accounts, logger);
         MenuService menu = new MenuService();
+        UserManagementService userService = new UserManagementService(accounts, logger);
 
         while (true)
         {
-            Console.WriteLine("\n=== LOGIN ADVANCED ===");
-            Console.Write("Username: ");
-            string user = Console.ReadLine();
+            Console.Write("\nUsername: ");
+            string username = Console.ReadLine();
             Console.Write("Password: ");
-            string pass = Console.ReadLine();
+            string password = Console.ReadLine();
 
-            var account = auth.Authenticate(user, pass);
+            var user = auth.Authenticate(username, password);
 
-            if (account != null)
+            if (user != null)
             {
                 Console.WriteLine("Login successful!");
 
-                if (account.Role == "Admin")
-                {
-                    menu.ShowAdminMenu();
-                }
+                if (user.Role == "Admin")
+                    menu.ShowAdminMenu(userService, user.Username);
                 else
-                {
                     menu.ShowUserMenu();
-                }
             }
             else
             {
                 // Xử lý thông báo lỗi
-                if (user != null && accounts.ContainsKey(user))
+                if (username != null && accounts.ContainsKey(username))
                 {
-                    var acc = accounts[user];
+                    var acc = accounts[username];
                     if (acc.IsLocked)
                     {
                         // Đã hiển thị "Account locked!" trong AuthService
