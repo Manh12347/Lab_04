@@ -26,6 +26,42 @@ namespace MIS_Lab4.Services
             }
         }
 
+        public List<UserAccount> GetAllUsers()
+        {
+            return new List<UserAccount>(accounts.Values);
+        }
+
+        public bool AddUser(string username, string password, string role)
+        {
+            if (accounts.ContainsKey(username))
+            {
+                return false; // Trùng username
+            }
+
+            accounts[username] = new UserAccount
+            {
+                Username = username,
+                Password = password,
+                Role = role,
+                IsLocked = false
+            };
+
+            logger.WriteLog($"Admin added new user: {username}");
+            return true;
+        }
+
+        public bool UnlockUser(string username)
+        {
+            if (!accounts.ContainsKey(username))
+            {
+                return false; // Không tồn tại
+            }
+
+            accounts[username].IsLocked = false;
+            logger.WriteLog($"Admin unlocked account: {username}");
+            return true;
+        }
+
         public void AddUser()
         {
             Console.Write("\nEnter new username: ");
