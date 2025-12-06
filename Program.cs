@@ -1,56 +1,68 @@
 using MIS_Lab4.Models;
+using MIS_Lab4.Services;
 using System;
 using System.Collections.Generic;
 
 class Program
 {
-    // Danh sách tài khoản mẫu
     static Dictionary<string, UserAccount> accounts = new Dictionary<string, UserAccount>()
     {
-        { "admin", new UserAccount { Username = "admin", Password = "admin123", Role = "Admin" } },
-        { "user1", new UserAccount { Username = "user1", Password = "user123", Role = "User" } }
+        { "admin", new UserAccount { Username="admin", Password="admin123", Role="Admin" } },
+        { "user1", new UserAccount { Username="user1", Password="user123", Role="User" } }
     };
 
     static void Main(string[] args)
     {
-        Console.WriteLine("=== MIS Lab 4 – Basic Login ===");
-        
-        Console.Write("Enter username: ");
-        string username = Console.ReadLine();
+        AuthService auth = new AuthService(accounts);
 
-        Console.Write("Enter password: ");
-        string password = Console.ReadLine();
-
-        // Kiểm tra username có tồn tại không
-        if (!accounts.ContainsKey(username))
+        while (true)
         {
-            Console.WriteLine("Invalid credentials!");
-        }
-        // Kiểm tra password
-        else if (BasicLogin(username, password))
-        {
-            Console.WriteLine("Login successful!");
-        }
-        else
-        {
-            Console.WriteLine("Invalid password");
-        }
-    }
+            Console.WriteLine("\n=== MIS LOGIN ADVANCED ===");
 
-    // Hàm login cơ bản
-    static bool BasicLogin(string username, string password)
-    {
-        // Kiểm tra tài khoản có tồn tại không
-        if (!accounts.ContainsKey(username))
-        {
-            return false;
+            Console.Write("Username: ");
+            string username = Console.ReadLine();
+
+            Console.Write("Password: ");
+            string password = Console.ReadLine();
+
+            var user = auth.Authenticate(username, password);
+
+            if (user != null) // login success
+            {
+                Console.WriteLine("Login successful!");
+
+                if (user.Role == "Admin")
+                {
+                    Console.WriteLine("Welcome Admin! You have full access.");
+                    // Task 008: Menu Admin
+                }
+                else
+                {
+                    Console.WriteLine("Welcome User! You have limited access.");
+                    // Task 008: Menu User
+                }
+            }
+            else
+            {
+                // Xử lý thông báo lỗi
+                if (username != null && accounts.ContainsKey(username))
+                {
+                    var account = accounts[username];
+                    if (account.IsLocked)
+                    {
+                        // Đã hiển thị "Account locked!" trong AuthService
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid password");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid credentials!");
+                }
+            }
         }
-
-        // Lấy thông tin user
-        var account = accounts[username];
-
-        // Kiểm tra password
-        return account.Password == password;
     }
 }
 
